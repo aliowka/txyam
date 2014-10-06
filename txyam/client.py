@@ -39,6 +39,7 @@ class YamClient:
         @param hosts: A C{list} of C{tuple}s containing hosts and ports.
         """
         self.hosts = hosts
+        self.hosts_hashring = HashRing(hosts)
         if connect:
             self.connect()
 
@@ -53,7 +54,7 @@ class YamClient:
         log.msg("Using %i active hosts" % len(hosts))
         if len(hosts) == 0:
             raise NoServerError("No connected servers remaining.")
-        return HashRing(hosts).get_node(key)
+        return self.hosts_hashring.get_node(key)
 
 
     @inlineCallbacks
